@@ -1,12 +1,19 @@
-﻿using Ordering.Domain.Abstractions;
-
-namespace Ordering.Domain.Models
+﻿namespace Ordering.Domain.Models
 {
-    public class OrderItem : Entity<Guid>
+    public class OrderItem : Entity<OrderItemId>
     {
-        public Guid OrderId { get; set; }
-        public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public OrderItem(OrderId orderId, ProductId productId, int quantity, decimal price)
+        {
+            Id = OrderItemId.Of(Guid.NewGuid());
+            OrderId = orderId;
+            ProductId = productId;
+            Quantity = quantity;
+            Price = price;
+        }
+
+        public OrderId OrderId { get; private set; } = default!;
+        public ProductId ProductId { get; private set; } = default!;
+        public int Quantity { get; private set; }
+        public decimal Price { get; private set; }
     }
 }
