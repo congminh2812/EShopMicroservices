@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Ordering.Domain.Models;
 using Ordering.Domain.ValueObjects;
 
@@ -14,6 +13,8 @@ namespace Ordering.Infrastructure.Data.Configurations
             builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
             builder.Property(x => x.Email).HasMaxLength(100);
             builder.HasIndex(x => x.Email).IsUnique();
+
+            builder.HasData;
         }
     }
 }
