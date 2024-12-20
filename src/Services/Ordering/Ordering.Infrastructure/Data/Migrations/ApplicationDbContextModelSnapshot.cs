@@ -142,11 +142,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                         {
                             b1.IsRequired();
 
-                            b1.Property<string>("CVV")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("nvarchar(3)");
-
                             b1.Property<string>("CardName")
                                 .IsRequired()
                                 .HasMaxLength(50)
@@ -156,6 +151,11 @@ namespace Ordering.Infrastructure.Data.Migrations
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("Cvv")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("nvarchar(3)");
 
                             b1.Property<string>("Expiration")
                                 .IsRequired()

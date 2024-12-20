@@ -1,8 +1,4 @@
-﻿using Ordering.Domain.Enums;
-using Ordering.Domain.Models;
-using Ordering.Domain.ValueObjects;
-
-namespace Ordering.Infrastructure.Data.Extensions
+﻿namespace Ordering.Infrastructure.Data.Extensions
 {
     internal class InitialData
     {
