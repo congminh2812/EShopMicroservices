@@ -4,22 +4,26 @@
     {
         public async Task<GetOrdersResult> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
         {
+            var pageIndex = request.PaginationRequest.PageIndex;
+            var pageSize = request.PaginationRequest.PageSize;
+
             var query = context.Orders
                 .Include(x => x.OrderItems)
                 .AsNoTracking()
-                .OrderBy(x => x.OrderName);
+                .OrderBy(x => x.OrderName.Value);
 
             var count = await query.LongCountAsync(cancellationToken);
+            var skip = (pageIndex - 1) * pageSize;
 
             var orders = await query
-                .Skip(request.PaginationRequest.PageIndex * request.PaginationRequest.PageSize)
-                .Take(request.PaginationRequest.PageSize)
+                .Skip(skip)
+                .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
             return new GetOrdersResult(new PaginatedResult<OrderDto>
             (
-                request.PaginationRequest.PageIndex,
-                request.PaginationRequest.PageSize,
+                pageIndex,
+                pageSize,
                 count,
                 orders.ToOrderDtoList()
             ));

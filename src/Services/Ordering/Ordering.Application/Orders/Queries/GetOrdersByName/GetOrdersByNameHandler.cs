@@ -9,10 +9,8 @@ namespace Ordering.Application.Orders.Queries.GetOrdersByName
                 .Include(x => x.OrderItems)
                 .AsNoTracking()
                 .Where(x => x.OrderName.Value.Contains(request.Name))
-                .OrderBy(x => x.OrderName)
+                .OrderBy(x => x.OrderName.Value)
                 .ToListAsync(cancellationToken);
-
-            //var orderDtos = orders.Adapt<List<OrderDto>>();
 
             return new GetOrdersByNameResult(orders.ToOrderDtoList());
         }

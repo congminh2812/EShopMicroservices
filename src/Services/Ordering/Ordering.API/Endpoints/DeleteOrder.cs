@@ -2,18 +2,16 @@
 
 namespace Ordering.API.Endpoints
 {
-    public record DeleteOrderRequest(OrderDto Order);
+    public record DeleteOrderRequest(Guid Id);
     public record DeleteOrderResponse(bool IsSuccess);
 
     public class DeleteOrder : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/orders", async (DeleteOrderRequest request, ISender sender) =>
+            app.MapDelete("/orders/{id}", async (Guid id, ISender sender) =>
             {
-                var command = request.Adapt<DeleteOrderCommand>();
-
-                var result = await sender.Send(command);
+                var result = await sender.Send(new DeleteOrderCommand(id));
 
                 var response = result.Adapt<DeleteOrderResponse>();
 

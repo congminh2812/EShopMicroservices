@@ -18,8 +18,8 @@
                 var order1 = Order.Create(OrderId.Of(Guid.Parse("b1de75b6-90e3-44e3-ae73-484ad05f1f4f")),
                                customer1.Id,
                                OrderName.Of("ORD_1"),
-                               Address.Of("Minh", "Ninh", "cmdev@gmail.com", "Q12, HCM", "Vietnam", "", "700000"),
-                               Address.Of("Minh", "Ninh", "cmdev@gmail.com", "Q12, HCM", "Vietnam", "", "700000"),
+                               Address.Of("Minh", "Ninh", "cmdev@gmail.com", "Q12, HCM", "Vietnam", "", "70000"),
+                               Address.Of("Minh", "Ninh", "cmdev@gmail.com", "Q12, HCM", "Vietnam", "", "70000"),
                                Payment.Of("Ninh Cong Minh", "12345798", "05/2030", "123", 1),
                                OrderStatus.Pending
                            );
