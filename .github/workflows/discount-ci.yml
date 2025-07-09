@@ -1,0 +1,29 @@
+name: CI - Discount.Grpc
+
+on:
+  push:
+    paths:
+      - 'src/Services/Discount/**'
+  pull_request:
+    paths:
+      - 'src/Services/Discount/**'
+
+jobs:
+  build-and-test:
+    name: Build & Test Discount.Grpc
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' # sửa lại nếu dùng .NET khác
+
+      - name: Restore
+        run: dotnet restore src/Services/Discount/Discount.Grpc/Discount.Grpc.csproj
+
+      - name: Build
+        run: dotnet build src/Services/Discount/Discount.Grpc/Discount.Grpc.csproj --no-restore --configuration Release

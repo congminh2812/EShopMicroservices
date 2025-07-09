@@ -1,0 +1,29 @@
+name: CI - Catalog.API
+
+on:
+  push:
+    paths:
+      - 'src/Services/Catalog/**'
+  pull_request:
+    paths:
+      - 'src/Services/Catalog/**'
+
+jobs:
+  build-and-test:
+    name: Build & Test Catalog.API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' # sửa lại nếu dùng .NET khác
+
+      - name: Restore
+        run: dotnet restore src/Services/Catalog/Catalog.API/Catalog.API.csproj
+
+      - name: Build
+        run: dotnet build src/Services/Catalog/Catalog.API/Catalog.API.csproj --no-restore --configuration Release

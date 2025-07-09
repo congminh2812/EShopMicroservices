@@ -1,0 +1,44 @@
+name: CD - Deploy Basket.API to K3s
+
+on:
+  workflow_run:
+    workflows: ["CI - Basket.API"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy to K3s
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code (optional)
+        uses: actions/checkout@v3
+
+      - name: SSH & Deploy to K3s
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
+          script: |
+            echo "🚀 Bắt đầu deploy Basket.API"
+
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+
+            echo "📦 Cập nhật source code"
+            cd ~/app || git clone https://github.com/<your-username>/<your-repo>.git ~/app
+            cd ~/app && git pull origin main
+
+            echo "📄 Apply YAML"
+            kubectl apply -f deploy/basket/deployment.yaml
+            kubectl apply -f deploy/basket/service.yaml
+            # kubectl apply -f deploy/basket/ingress.yaml
+
+            echo "🔄 Restart pod để nhận image mới"
+            kubectl rollout restart deployment basket-api -n default
+
+            echo "📊 Kiểm tra rollout"
+            kubectl rollout status deployment basket-api -n default
+
+            echo "✅ Deploy Basket.API hoàn tất!"
