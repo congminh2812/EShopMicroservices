@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: basket-api
-          image: cmdev/basket-api:latest
+          image: cmdev1997/basket-api:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80

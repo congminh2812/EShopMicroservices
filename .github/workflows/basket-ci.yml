@@ -48,4 +48,4 @@ jobs:
           context: ./src
           file: ./src/Services/Basket/Basket.API/Dockerfile
           push: true
-          tags: cmdev/basket-api:latest
+          tags: cmdev1997/basket-api:latest
