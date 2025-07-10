@@ -16,24 +16,25 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Copy kong.yaml to VPS and restart Kong
+      - name: Upload kong.yaml to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
+          source: "kong.yaml"
+          target: "~/kong-config"
+
+      - name: SSH to VPS and apply config
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_PRIVATE_KEY }}
           script: |
-            echo "🚀 Deploy kong.yaml to K3s"
-            mkdir -p ~/kong-config
-
-            echo "📄 Ghi đè file kong.yaml"
-            cat <<EOF > ~/kong-config/kong.yaml
-            $(cat kong.yaml)
-            EOF
-
             echo "🔄 Cập nhật lại ConfigMap kong-config"
             kubectl delete configmap kong-config -n kong --ignore-not-found
-            kubectl create configmap kong-config --from-file=kong.yaml=~/kong-config/kong.yaml -n kong
+            kubectl create configmap kong-config --from-file=kong.yaml=/root/kong-config/kong.yaml -n kong
 
             echo "🔁 Restart Kong deployment"
             kubectl rollout restart deployment kong-kong -n kong
