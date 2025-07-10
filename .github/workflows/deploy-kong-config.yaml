@@ -27,7 +27,9 @@ jobs:
             mkdir -p ~/kong-config
 
             echo "📄 Ghi đè file kong.yaml"
-            cat <<EOF > ~/kong-config/kong.yaml $(cat kong.yaml) EOF
+            cat <<EOF > ~/kong-config/kong.yaml
+            $(cat kong.yaml)
+            EOF
 
             echo "🔄 Cập nhật lại ConfigMap kong-config"
             kubectl delete configmap kong-config -n kong --ignore-not-found
