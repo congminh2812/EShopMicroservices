@@ -4,15 +4,15 @@
 # ├── kong.yaml          <-- File cấu hình DB-less
 # ├── .github/
 # │   └── workflows/
-# │       └── deploy-kong-config.yaml <-- CI/CD deploy lên K3s
+# │       └── kong-config.yaml <-- CI/CD deploy lên K3s
 
 # --- kong.yaml ---
 _format_version: "2.1"
 
 services:
-  - name: basket-api
+  - name: basket-service
     url: http://basket-api.default.svc.cluster.local
     routes:
-      - name: basket-api-route
+      - name: basket-route
         paths:
           - /basket
