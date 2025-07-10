@@ -27,7 +27,7 @@ jobs:
             export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
             echo "📦 Cập nhật source code"
-            cd ~/app || git clone https://github.com/<your-username>/<your-repo>.git ~/app
+            cd ~/app || git clone https://github.com/congminh2812/EShopMicroservices.git ~/app
             cd ~/app && git pull origin main
 
             echo "📄 Apply YAML"
