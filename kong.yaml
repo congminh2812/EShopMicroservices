@@ -10,7 +10,7 @@
 _format_version: "2.1"
 
 services:
-  - name: basket-service
+  - name: basket-api
     url: http://basket-api.default.svc.cluster.local
     routes:
       - name: basket-route
