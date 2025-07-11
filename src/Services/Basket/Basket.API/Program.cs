@@ -50,12 +50,6 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
     return handler;
 });
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(80); // 👈 rất quan trọng
-});
-
-
 var app = builder.Build();
 
 app.MapCarter();
@@ -66,6 +60,5 @@ app.UseHealthChecks("/health", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
-
 
 app.Run();
