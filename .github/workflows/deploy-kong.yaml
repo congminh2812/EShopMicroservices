@@ -38,7 +38,6 @@ jobs:
 
       - name: Deploy Kong with PostgreSQL (DB mode)
         run: |
-          export KUBECONFIG=$PWD/kubeconfig.yaml
           helm upgrade --install kong kong/kong \
             --namespace kong --create-namespace \
             --set ingressController.enabled=true \
