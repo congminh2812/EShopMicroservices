@@ -22,7 +22,9 @@ jobs:
           version: latest
 
       - name: Decode kubeconfig
-        run: echo "$KUBECONFIG_DATA" | base64 -d > kubeconfig.yaml
+        run: |
+          echo "$KUBECONFIG_DATA" | base64 -d > kubeconfig.yaml
+          echo "KUBECONFIG=$PWD/kubeconfig.yaml" >> $GITHUB_ENV
         env:
           KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
 
@@ -36,6 +38,7 @@ jobs:
 
       - name: Deploy Kong with PostgreSQL (DB mode)
         run: |
+          export KUBECONFIG=$PWD/kubeconfig.yaml
           helm upgrade --install kong kong/kong \
             --namespace kong --create-namespace \
             --set ingressController.enabled=true \
@@ -45,8 +48,7 @@ jobs:
             --set env.pg_password=kong \
             --set env.pg_database=kong \
             --set env.pg_host=kong-postgresql.kong.svc.cluster.local \
-            --wait \
-            --kubeconfig kubeconfig.yaml
+            --wait
 
       - name: Wait for Kong to be ready
         run: |
