@@ -27,7 +27,7 @@ namespace Basket.API.Basket.StoreBasket
 
         private async Task DeductDiscountAsync(StoreBasketCommand command, CancellationToken cancellationToken)
         {
-            // TODO: communicate with Discount.Grpc and calculate lastest prices of product
+            // TODO: communicate with Discount.Grpc and calculate lastest prices of products
             foreach (var item in command.Cart.Items)
             {
                 var coupon = await discountProtoServiceClient.GetDiscountAsync(new GetDiscountRequest { ProductName = item.ProductName }, cancellationToken: cancellationToken);
