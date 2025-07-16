@@ -1,0 +1,44 @@
+name: CD - Deploy Discount.Grpc to K3s
+
+on:
+  workflow_run:
+    workflows: ["CI - Discount.Grpc"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy to K3s
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code (optional)
+        uses: actions/checkout@v3
+
+      - name: SSH & Deploy to K3s
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
+          script: |
+            echo "🚀 Bắt đầu deploy Discount.Grpc"
+
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+
+            echo "📦 Cập nhật source code"
+            cd ~/app || git clone https://github.com/congminh2812/EShopMicroservices.git ~/app
+            cd ~/app && git pull origin main
+
+            echo "📄 Apply YAML"
+            kubectl apply -f deploy/discount/deployment.yaml
+            kubectl apply -f deploy/discount/service.yaml
+            # kubectl apply -f deploy/discount/ingress.yaml
+
+            echo "🔄 Restart pod để nhận image mới"
+            kubectl rollout restart deployment discount-grpc -n default
+
+            echo "📊 Kiểm tra rollout"
+            kubectl rollout status deployment discount-grpc -n default
+
+            echo "✅ Deploy Discount.Grpc hoàn tất!"

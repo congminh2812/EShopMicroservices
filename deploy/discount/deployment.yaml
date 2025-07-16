@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discount-grpc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discount-grpc
+  template:
+    metadata:
+      labels:
+        app: discount-grpc
+    spec:
+      containers:
+        - name: discount-grpc
+          image: cmdev1997/discount-grpc:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
