@@ -10,5 +10,5 @@ spec:
     app: discount-grpc
   ports:
     - protocol: TCP
-      port: 80
+      port: 5002
       targetPort: 5002
