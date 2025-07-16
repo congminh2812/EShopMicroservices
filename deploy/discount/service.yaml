@@ -9,6 +9,11 @@ spec:
   selector:
     app: discount-grpc
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 5002
       targetPort: 5002
+    - name: grpc
+      protocol: TCP
+      port: 9002
+      targetPort: 9002

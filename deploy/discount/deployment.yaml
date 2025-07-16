@@ -18,4 +18,5 @@ spec:
           image: cmdev1997/discount-grpc:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 5002
+            - containerPort: 5002   # HTTP (health check, REST)
+            - containerPort: 9002   # gRPC (main gRPC endpoint)
