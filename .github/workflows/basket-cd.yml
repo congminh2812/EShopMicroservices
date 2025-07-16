@@ -30,6 +30,9 @@ jobs:
             cd ~/app || git clone https://github.com/congminh2812/EShopMicroservices.git ~/app
             cd ~/app && git pull origin main
 
+            echo "📄 Apply GRPC global config"
+            kubectl apply -f deploy/common-config.yaml
+
             echo "📄 Apply YAML"
             kubectl apply -f deploy/basket/deployment.yaml
             kubectl apply -f deploy/basket/service.yaml

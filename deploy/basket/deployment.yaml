@@ -25,3 +25,7 @@ spec:
                 secretKeyRef:
                   name: db-secret-basket
                   key: ConnectionStrings__DefaultConnection
+          envFrom:
+            - configMapRef:
+                name: common-config
+          
