@@ -20,6 +20,7 @@
 
         public async Task<bool> DeleteBasket(string userName, CancellationToken cancellationToken)
         {
+            // Test CI/CD
             session.Delete<ShoppingCart>(userName);
             await session.SaveChangesAsync(cancellationToken);
 
