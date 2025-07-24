@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: cmdev1997/basket-api
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5001
+
+env: {}
+secrets: {}

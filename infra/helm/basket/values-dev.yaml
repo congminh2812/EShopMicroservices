@@ -1,0 +1,7 @@
+env:
+  ENVIRONMENT: dev
+  SOME_FLAG: "true"
+
+secrets:
+  db:
+    ConnectionStrings__DefaultConnection: "Server=103.221.223.177;Port=30010;Database=basket;User Id=admin;Password=admin@123;Include Error Detail=true"
