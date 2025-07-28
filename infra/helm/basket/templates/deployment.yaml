@@ -26,4 +26,4 @@ spec:
                   key: ConnectionStrings__DefaultConnection
           envFrom:
             - configMapRef:
-                name: common-config
+                name: basket-configmap

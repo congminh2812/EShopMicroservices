@@ -1,9 +1,6 @@
 env:
-  ENVIRONMENT: dev
+  ENVIRONMENT: staging
   SOME_FLAG: "true"
-
-configmap:
-  GrpcSettings__DiscountUrl: "http://discount-grpc:9002"
 
 secrets:
   db:
@@ -11,7 +8,7 @@ secrets:
 
 image:
   repository: cmdev1997/basket-api
-  tag: dev-latest
+  tag: staging-latest
   pullPolicy: Always
 
 service:
