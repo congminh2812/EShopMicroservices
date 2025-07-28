@@ -2,7 +2,10 @@ name: CD - Deploy Basket.API to K3s
 
 on:
   workflow_run:
-    workflows: ["CI - Basket.API"]
+    workflows:
+      - "CI - Basket.API [dev]"
+      - "CI - Basket.API [staging]"
+      - "CI - Basket.API [prod]"
     types:
       - completed
 

@@ -1,47 +1,58 @@
+name: CI - Basket.API
+
 on:
   push:
-    branches: [dev, staging, main]
-    paths:
-      - 'src/Services/Basket/**'
+    branches:
+      - dev
+      - staging
+      - main
 
 jobs:
-  build:
+  build-and-push:
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Build
-        run: dotnet build src/Services/Basket/Basket.API/Basket.API.csproj --configuration Release
-
-      - name: Login DockerHub
+      - name: Log in to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set IMAGE TAG
-        id: set_tag
+      - name: Detect environment & set tag
+        id: setenv
         run: |
-          BRANCH=${GITHUB_REF##*/}
-          if [[ "$BRANCH" == "main" ]]; then
-            echo "tag=prod-latest" >> $GITHUB_OUTPUT
-          elif [[ "$BRANCH" == "staging" ]]; then
-            echo "tag=staging-latest" >> $GITHUB_OUTPUT
+          BRANCH="${GITHUB_REF##*/}"
+          if [ "$BRANCH" = "dev" ]; then
+            echo "ENV=dev" >> $GITHUB_ENV
+            echo "TAG=dev-latest" >> $GITHUB_ENV
+            echo "NAME=CI - Basket.API [dev]" >> $GITHUB_ENV
+          elif [ "$BRANCH" = "staging" ]; then
+            echo "ENV=staging" >> $GITHUB_ENV
+            echo "TAG=staging-latest" >> $GITHUB_ENV
+            echo "NAME=CI - Basket.API [staging]" >> $GITHUB_ENV
+          elif [ "$BRANCH" = "main" ]; then
+            echo "ENV=prod" >> $GITHUB_ENV
+            echo "TAG=prod-latest" >> $GITHUB_ENV
+            echo "NAME=CI - Basket.API [prod]" >> $GITHUB_ENV
           else
-            echo "tag=dev-latest" >> $GITHUB_OUTPUT
+            echo "❌ Branch không hợp lệ cho CI"
+            exit 1
           fi
 
-      - name: Build & Push Docker Image
+      - name: Set dynamic workflow name
+        run: echo "${{ env.NAME }}"
+
+      - name: Build & Push Docker image to DockerHub
         uses: docker/build-push-action@v5
         with:
-          context: ./src
-          file: ./src/Services/Basket/Basket.API/Dockerfile
+          context: .
+          file: src/Services/Basket/Basket.API/Dockerfile
           push: true
-          tags: cmdev1997/basket-api:${{ steps.set_tag.outputs.tag }}
+          tags: cmdev1997/basket-api:${{ env.TAG }}
