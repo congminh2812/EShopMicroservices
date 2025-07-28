@@ -12,6 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Lấy branch vừa chạy CI
+        run: echo "BRANCH_NAME=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_ENV
+
+      - name: Xác định ENVIRONMENT theo branch
+        id: envmap
+        run: |
+          if [ "${{ github.event.workflow_run.head_branch }}" = "dev" ]; then
+            echo "ENV=dev" >> $GITHUB_ENV
+          elif [ "${{ github.event.workflow_run.head_branch }}" = "staging" ]; then
+            echo "ENV=staging" >> $GITHUB_ENV
+          elif [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+            echo "ENV=prod" >> $GITHUB_ENV
+          else
+            echo "❌ Branch không hợp lệ cho CD"
+            exit 1
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -22,20 +39,19 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_PRIVATE_KEY }}
           script: |
-            echo "🚀 Bắt đầu deploy Basket.API bằng Helm"
+            echo "🚀 Bắt đầu deploy Basket.API cho môi trường ${{ env.ENV }}"
 
             export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
-            echo "📦 Pull source code mới nhất"
             cd ~/app || git clone https://github.com/congminh2812/EShopMicroservices.git ~/app
-            cd ~/app && git pull origin main
+            cd ~/app && git pull origin ${{ github.event.workflow_run.head_branch }}
 
-            echo "📄 Tạo configmap và secret từ Helm values"
+            echo "📄 Deploy Helm với values-${{ env.ENV }}.yaml"
             helm upgrade --install basket-api ./infra/helm/basket \
-              -f ./infra/helm/basket/values-dev.yaml \
+              -f ./infra/helm/basket/values-${{ env.ENV }}.yaml \
               -n default
 
             echo "📊 Kiểm tra rollout"
             kubectl rollout status deployment basket-api -n default
 
-            echo "✅ Deploy Basket.API hoàn tất!"
+            echo "✅ Deploy Basket.API cho môi trường ${{ env.ENV }} hoàn tất!"
